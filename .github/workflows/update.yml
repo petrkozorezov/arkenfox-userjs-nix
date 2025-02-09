@@ -1,0 +1,29 @@
+name: Update user.js
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Every day at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-userjs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install node.js
+        uses: actions/setup-node@v4
+
+      - name: Run fetcher
+        run: |
+          ./fetch.sh > arkenfox-userjs.json
+
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions[bot]
+          author_email: github-actions[bot]@users.noreply.github.com
+          message: "Update user.js"
+          add: "arkenfox-userjs.json"
